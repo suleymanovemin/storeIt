@@ -1,64 +1,64 @@
+"use client";
+
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import Image from "next/image";
 import React, { useState } from "react";
-import { Button } from "./ui/button";
-import { sendEmailOTP, verifySecret } from "@/lib/actions/user.actions";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { verifySecret, sendEmailOTP } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
 
-const OTPModal = ({
+const OtpModal = ({
   accountId,
   email,
 }: {
   accountId: string;
   email: string;
 }) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const router = useRouter();
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
     setIsLoading(true);
-    setErrorMessage("");
+
+    console.log({ accountId, password });
 
     try {
       const sessionId = await verifySecret({ accountId, password });
 
+      console.log({ sessionId });
+
       if (sessionId) router.push("/");
     } catch (error) {
-      setErrorMessage("Failed to verify OTP");
       console.log("Failed to verify OTP", error);
     }
 
     setIsLoading(false);
   };
 
-  const handleResendOTP = async () => {
+  const handleResendOtp = async () => {
     await sendEmailOTP({ email });
   };
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent className="sha-alert-dialog">
+      <AlertDialogContent className="shad-alert-dialog">
         <AlertDialogHeader className="relative flex justify-center">
           <AlertDialogTitle className="h2 text-center">
             Enter Your OTP
@@ -71,7 +71,7 @@ const OTPModal = ({
               className="otp-close-button"
             />
           </AlertDialogTitle>
-          <AlertDialogDescription className="subtitle-2  text-center text-light-100">
+          <AlertDialogDescription className="subtitle-2 text-center text-light-100">
             We&apos;ve sent a code to{" "}
             <span className="pl-1 text-brand">{email}</span>
           </AlertDialogDescription>
@@ -90,11 +90,10 @@ const OTPModal = ({
 
         <AlertDialogFooter>
           <div className="flex w-full flex-col gap-4">
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
             <AlertDialogAction
+              onClick={handleSubmit}
               className="shad-submit-btn h-12"
               type="button"
-              onClick={handleSubmit}
             >
               Submit
               {isLoading && (
@@ -114,7 +113,7 @@ const OTPModal = ({
                 type="button"
                 variant="link"
                 className="pl-1 text-brand"
-                onClick={handleResendOTP}
+                onClick={handleResendOtp}
               >
                 Click to resend
               </Button>
@@ -126,4 +125,4 @@ const OTPModal = ({
   );
 };
 
-export default OTPModal;
+export default OtpModal;

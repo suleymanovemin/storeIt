@@ -1,20 +1,18 @@
 "use client";
-import { navItems } from "@/constants";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React from "react";
 
-const Sidebar = ({
-  fullName,
-  avatar,
-  email,
-}: {
+import Link from "next/link";
+import Image from "next/image";
+import { navItems } from "@/constants";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+interface Props {
   fullName: string;
-  email: string;
   avatar: string;
-}) => {
+  email: string;
+}
+
+const Sidebar = ({ fullName, avatar, email }: Props) => {
   const pathname = usePathname();
 
   return (
@@ -44,7 +42,7 @@ const Sidebar = ({
               <li
                 className={cn(
                   "sidebar-nav-item",
-                  pathname === url && "shad-active"
+                  pathname === url && "shad-active",
                 )}
               >
                 <Image
@@ -54,10 +52,10 @@ const Sidebar = ({
                   height={24}
                   className={cn(
                     "nav-icon",
-                    pathname === url && "nav-icon-active"
+                    pathname === url && "nav-icon-active",
                   )}
                 />
-                <p className="hidden lg:block text">{name}</p>
+                <p className="hidden lg:block">{name}</p>
               </li>
             </Link>
           ))}
@@ -88,5 +86,4 @@ const Sidebar = ({
     </aside>
   );
 };
-
 export default Sidebar;
